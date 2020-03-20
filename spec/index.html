@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>manhattan-time-picker</title>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="time-picker.css"
+            >
+    </head>
+    <body>
+        <label>
+            Time
+            <input
+                name="date"
+                value="10:00"
+                data-mh-time-picker
+                >
+        </label>
+
+        <script src="../node_modules/manhattan-essentials/umd/index.js"></script>
+        <script src="../umd/index.js"></script>
+        <script>
+
+            const $ = window['manhattan-essentials']
+
+            const TimePicker = window['manhattan-time-picker']
+                .timePicker
+                .TimePicker
+
+            for(let fieldElm of $.many('[data-mh-time-picker]')) {
+                let d = new TimePicker(fieldElm)
+                d.init()
+            }
+
+        </script>
+    </body>
+</html>
