@@ -1,6 +1,4 @@
 
-
-
 /**
  * A time parser.
  */
@@ -96,6 +94,8 @@ TimeParser.parsers = {
      *
      */
     '24h': (inst, s) => {
+
+        // Remove spaces from the
 
     },
 
