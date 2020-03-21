@@ -25,7 +25,7 @@ export class Time {
 
     set hour(hour) {
         if (hour < 0 || hour > 23) {
-            throw 'Not a valid hour'
+            throw 'TimeError: Not a valid hour'
         }
         this._hour = hour
     }
@@ -36,7 +36,7 @@ export class Time {
 
     set minute(minute) {
         if (minute < 0 || minute > 23) {
-            throw 'Not a valid minute'
+            throw 'TimeError: Not a valid minute'
         }
         this._minute = minute
     }
@@ -47,7 +47,7 @@ export class Time {
 
     set second(second) {
         if (second < 0 || second > 23) {
-            throw 'Not a valid second'
+            throw 'TimeError: Not a valid second'
         }
         this._second = second
     }

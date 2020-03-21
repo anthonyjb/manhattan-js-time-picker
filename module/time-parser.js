@@ -5,16 +5,15 @@
 export class TimeParser {
 
     /**
-     * Format (and return) a 24h time (string) as a string using the named
-     * formatter.
+     * Format (and return) a time as a string using the named formatter.
      */
     format(formatter, time) {
         return this.constructor.formatters[formatter](this, time)
     }
 
     /**
-     * Attempt to parse (and return) a string as a 24h time (string) using the
-     * list of named parsers.
+     * Attempt to parse (and return) a string as a time using the list of
+     * named parsers.
      */
     parsers(parsers, s) {
         let time = null
@@ -33,8 +32,7 @@ export class TimeParser {
 // -- Formatters --
 
 /**
- * A set of functions that can ouput 24h times (string) in various string
- * formats.
+ * A set of functions that can ouput times in various string formats.
  */
 TimeParser.formatter = {
 
@@ -42,28 +40,46 @@ TimeParser.formatter = {
      * Format time as 12h with minutes, e.g 11:00pm.
      */
     '12hm': (inst, time) => {
-        return '@@'
+        let meridiem = 'am'
+        let hour = time.hour
+        if (hour > 12) {
+            hour = time.hour - 12
+            meridiem = 'pm'
+        }
+        const minuteStr = time.minute.toString().padStart(2, '0')
+        return `${hour}:${minuteStr} ${meridiem}`
     },
 
     /**
      * Format time as 12h with minutes and seconds, e.g 11:00:00pm.
      */
     '12hms': (inst, time) => {
-        return '@@'
+        let meridiem = 'am'
+        let hour = time.hour
+        if (hour > 12) {
+            hour = time.hour - 12
+            meridiem = 'pm'
+        }
+        const minuteStr = time.minute.toString().padStart(2, '0')
+        const secondStr = time.second.toString().padStart(2, '0')
+        return `${hour}:${minuteStr}:${secondStr} ${meridiem}`
     },
 
     /**
      * Format time as 24h with minutes, e.g 13:00.
      */
     '24hm': (inst, time) => {
-        return '@@'
+        const minuteStr = time.minute.toString().padStart(2, '0')
+        return `${time.hour}:${minuteStr}`
     },
 
     /**
      * Format time as 24h with minutes and seconds, e.g 13:00:00.
      */
     '24hms': (inst, time) => {
-        return '@@'
+        const minuteStr = time.minute.toString().padStart(2, '0')
+        const secondStr = time.second.toString().padStart(2, '0')
+        return `${time.hour}:${minuteStr}:${secondStr}`
     }
 }
 
@@ -95,8 +111,47 @@ TimeParser.parsers = {
      */
     '24h': (inst, s) => {
 
-        // Remove spaces from the
+        // Get groups of digits
+        let groups = s.match(/(\d{1,2})/g)
 
+        // Validate the number of groups
+        if (!groups || group.length > 3) {
+            return null
+        }
+
+        if (groups.length > 1 && groups[1].length !== 2) {
+            return null
+        }
+
+        if (groups.length > 2 && groups[2].length !== 2) {
+            return null
+        }
+
+        // Convert groups to integers
+        groups = groups.map(g => parseInt(g, 10))
+
+        // Convert to time
+        let hour = groups[0]
+        let minute = 0
+        let second = 0
+
+        if (groups.length > 1) {
+            minute = groups[1]
+        }
+
+        if (groups.length > 2) {
+            minute = groups[2]
+        }
+
+        try {
+            return new Time(hour, minute, second)
+        } catch (error){
+            if (error.startswith('TimeError: ')) {
+                return null
+            } else {
+                throw error
+            }
+        }
     },
 
     /**
@@ -105,6 +160,8 @@ TimeParser.parsers = {
      * - 1 am
      * - 1 a.m
      * - 1 a.m.
+     * - 1.00 am
+     * - 1.00.00 am
      * - 1:00 am
      * - 1:00:00 am
      * - noon
