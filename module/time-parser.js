@@ -92,71 +92,11 @@ TimeParser.formatter = {
 TimeParser.parsers = {
 
     /**
-     * Return a 24h time (string) from a string using the 24h format
-     * (`HH:MM:SS`), e.g:
-     *
-     * - 1
-     * - 1:00
-     * - 1:00:00
-     * - 01
-     * - 13
-     * - 13:00
-     * - 13:00:00
-     * - 13.00
-     * - 13.00.00
-     * - 13h
-     * - 13h00m
-     * - 13h00m00s
-     *
-     */
-    '24h': (inst, s) => {
-
-        // Get groups of digits
-        let groups = s.match(/(\d{1,2})/g)
-
-        // Validate the number of groups
-        if (!groups || group.length > 3) {
-            return null
-        }
-
-        if (groups.length > 1 && groups[1].length !== 2) {
-            return null
-        }
-
-        if (groups.length > 2 && groups[2].length !== 2) {
-            return null
-        }
-
-        // Convert groups to integers
-        groups = groups.map(g => parseInt(g, 10))
-
-        // Convert to time
-        let hour = groups[0]
-        let minute = 0
-        let second = 0
-
-        if (groups.length > 1) {
-            minute = groups[1]
-        }
-
-        if (groups.length > 2) {
-            minute = groups[2]
-        }
-
-        try {
-            return new Time(hour, minute, second)
-        } catch (error){
-            if (error.startswith('TimeError: ')) {
-                return null
-            } else {
-                throw error
-            }
-        }
-    },
-
-    /**
      * Return a 24h time (string) from a string using the 12h format, e.g:
      *
+     * - 1
+     * - 1.00
+     * - 1.00.00
      * - 1 am
      * - 1 a.m
      * - 1 a.m.
@@ -172,6 +112,26 @@ TimeParser.parsers = {
      * the separator can be a `:` or '.', minutes and seconds are optional.
      */
     '12h': (inst, s) => {
+        let ts = s.trim()
+
+    },
+
+    /**
+     * @@
+     */
+    'hms': () => {
+        let ts = s.trim()
+
+        // 13h
+        // 13h00m
+        // 13h00m00s
+    },
+
+    /**
+     * Return a time from a string in ISO 8601 format (e.g `hh:mm:ss`).
+     */
+    'iso': (inst, s) => {
+        let ts = s.trim()
 
     }
 
