@@ -98,6 +98,14 @@ describe('Time', () => {
             time = new Time(11, 12, 13)
         })
 
+        describe('copy', () => {
+            it('should return a copy of the time', () => {
+                const timeCopy = time.copy()
+                timeCopy.toString().should.equal(time.toString())
+                timeCopy.should.not.equal(time)
+            })
+        })
+
         describe('toString', () => {
             it('should return a string representing the time', () => {
                 time.toString().should.equal('11:12:13')

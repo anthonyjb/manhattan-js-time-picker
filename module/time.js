@@ -55,7 +55,14 @@ export class Time {
     // Methods
 
     /**
-     * Return the time as a string
+     * Return a copy of the time.
+     */
+    copy() {
+        return new this.constructor(this.hour, this.minute, this.second)
+    }
+
+    /**
+     * Return the time as a string.
      */
     toString() {
         const hourStr = this.hour.toString().padStart(2, '0')
