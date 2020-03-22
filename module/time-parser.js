@@ -112,19 +112,39 @@ TimeParser.parsers = {
      * the separator can be a `:` or '.', minutes and seconds are optional.
      */
     '12h': (inst, s) => {
-        let ts = s.trim()
+        let ts = s.toLowerCase().trim()
 
     },
 
     /**
-     * @@
+     * Return a time from a string in the hms 24h format, e.g: 1h15m10s.
      */
     'hms': () => {
-        let ts = s.trim()
+        let ts = s.toLowerCase().trim()
+        let [hour, remainder] = ts.split('h')
+        let [minute, remainder] = remainder.split('m')
+        let [second, remainder] = remainder.split('s')
 
-        // 13h
-        // 13h00m
-        // 13h00m00s
+        if (hour.length > 2 || minute.length > 2 || second.length > 2) {
+            return null
+        }
+
+        hour = parseInt((hour, 0), 10)
+        minute = parseInt((minute, 0), 10)
+        second = parseInt((second, 0), 10)
+
+        if (hour + minute + second === NaN) {
+            return null
+        }
+
+        try {
+            return new Time(hour, minute, second)
+        } catch (error) {
+            if (error.startsWith('TimeError:')) {
+                return null
+            }
+            throw error
+        }
     },
 
     /**
@@ -133,6 +153,42 @@ TimeParser.parsers = {
     'iso': (inst, s) => {
         let ts = s.trim()
 
-    }
+        let hour = 0
+        let minute = 0
+        let second = 0
 
+        if (ts.length == 5) {
+            [hour, minute] = ts.split(':')
+        } else if (ts.length == 7) {
+            [hour, minute, second] = ts.split(':')
+        } else if (ts.length == 6) {
+            hour = ts.substring(2)
+            minute = ts.substring(2, 2)
+            second = ts.substring(4, 2)
+        } else if (ts.length == 3) {
+            hour = ts.substring(2)
+            minute = ts.substring(2, 2)
+        } else if (ts.length == 2) {
+            hour = ts
+        } else {
+            return null
+        }
+
+        hour = parseInt((hour, 0), 10)
+        minute = parseInt((minute, 0), 10)
+        second = parseInt((second, 0), 10)
+
+        if (hour + minute + second === NaN) {
+            return null
+        }
+
+        try {
+            return new Time(hour, minute, second)
+        } catch (error) {
+            if (error.startsWith('TimeError:')) {
+                return null
+            }
+            throw error
+        }
+    }
 }
