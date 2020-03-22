@@ -98,7 +98,7 @@ describe('Time', () => {
             time = new Time(11, 12, 13)
         })
 
-        describe('format', () => {
+        describe('toString', () => {
             it('should return a string representing the time', () => {
                 time.toString().should.equal('11:12:13')
             })
