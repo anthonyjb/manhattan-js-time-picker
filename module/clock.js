@@ -22,7 +22,9 @@ export class Clock {
 
         // Domain for related DOM elements
         this._dom = {
-            'clock': null
+            'clock': null,
+            'hour': null,
+            'time': null
         }
 
         // Store a reference to the time picker
@@ -48,6 +50,11 @@ export class Clock {
 
     set time(time) {
         this._time = time.copy()
+
+        console.log('here')
+
+        this._dom.hour.textContent = '09'
+        this._dom.minute.textContent = '30'
     }
 
     // -- Public methods --
@@ -66,13 +73,33 @@ export class Clock {
         // Store a reference to the clock instance against the parent
         this._dom.parent._mhClock = this
 
-        // Build the calendar component...
+        // Build the clock component...
         const {css} = this.constructor
-        this._dom.clock = $.create('div', {'class': css['calendar']})
+        this._dom.clock = $.create('div', {'class': css['clock']})
 
         // @@
+        this._dom.clock.classList.add('mh-clock--hour-dial')
 
-        // Add the calendar to the parent element
+        // Time
+        const timeElm = $.create('div', {'class': css['time']})
+        this._dom.clock.append(timeElm)
+
+        this._dom.hour = $.create('div', {'class': css['hour']})
+        timeElm.appendChild(this._dom.hour)
+
+        this._dom.minute = $.create('div', {'class': css['minute']})
+        timeElm.appendChild(this._dom.minute)
+
+        // Dials
+        const dialsElm = $.create('div', {'class': css['dials']})
+        this._dom.clock.append(dialsElm)
+
+        // clock__dials
+        // clock__dial
+        // clock__mark
+        // clock__hand
+
+        // Add the clock to the parent element
         this.parent.appendChild(this.clock)
 
     }
@@ -84,5 +111,32 @@ export class Clock {
 
 Clock.css = {
 
+    /**
+     * Applied to the root clock element.
+     */
+    'clock': 'mh-clock',
+
+    /**
+     * Applied to the container for the hour and minute dials.
+     */
+    'dials': 'mh-clock__dials',
+
+    /**
+     * Applied to the hour element within the time.
+     */
+    'hour': 'mh-clock__hour',
+
+    /**
+     * Applied to the minute element within the time.
+     */
+    'minute': 'mh-clock__minute',
+
+    /**
+     * Applied to the element that displays the time.
+     */
+    'time': 'mh-clock__time'
+
 }
 
+// @@ hour dial
+// @@ minute dial

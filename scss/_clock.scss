@@ -1,0 +1,81 @@
+
+.mh-clock {
+    font-family: Ubuntu, Helvetica, Arial, sans-serif;
+
+    &--hour-dial {
+
+        .mh-clock {
+            &__hour {
+                color: #ef4f6f;
+            }
+        }
+    }
+
+    &--minute-dial {
+
+        .mh-clock {
+            &__hour {
+                color: #ef4f6f;
+            }
+        }
+    }
+
+    &__time {
+        border-bottom: 1px solid #d4dce0;
+        color: #999;
+        font-size: 32px;
+        font-weight: 500;
+        height: 50px;
+        position: relative;
+
+        &::before {
+            bottom: 0;
+            content: ':';
+            display: block;
+            left: 0;
+            line-height: 50px;
+            pointer-events: none;
+            position: absolute;
+            right: 0;
+            text-align: center;
+            top: 0;
+        }
+    }
+
+    &__hour {
+        cursor: pointer;
+        left: 0;
+        line-height: 50px;
+        position: absolute;
+        text-align: right;
+        top: 0;
+        width: calc(50% - 10px);
+    }
+
+    &__minute {
+        cursor: pointer;
+        line-height: 50px;
+        position: absolute;
+        right: 0;
+        text-align: left;
+        top: 0;
+        width: calc(50% - 10px);
+    }
+
+    &__dials {
+        background: rgba(#d4dce0, 0.1);
+        height: 240px;
+        position: relative;
+
+        &::before {
+            background: #fff;
+            border-radius: 110px;
+            content: '';
+            height: 220px;
+            left: 10px;
+            position: absolute;
+            top: 10px;
+            width: 220px;
+        }
+    }
+}
