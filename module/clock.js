@@ -24,6 +24,8 @@ export class Clock {
         this._dom = {
             'clock': null,
             'hour': null,
+            'hourDial': null,
+            'minuteDial': null,
             'time': null
         }
 
@@ -51,8 +53,7 @@ export class Clock {
     set time(time) {
         this._time = time.copy()
 
-        console.log('here')
-
+        // @@
         this._dom.hour.textContent = '09'
         this._dom.minute.textContent = '30'
     }
@@ -94,14 +95,44 @@ export class Clock {
         const dialsElm = $.create('div', {'class': css['dials']})
         this._dom.clock.append(dialsElm)
 
-        // clock__dials
-        // clock__dial
-        // clock__mark
+        // Hours dial
+        this._dom.hourDial = $.create(
+            'div',
+            {'class': `${css['dial']} ${css['hour_dial']}`}
+        )
+        dialsElm.append(this._dom.hourDial)
+
+        for (let hour = 0; hour < 24; hour += 1) {
+            let markStr = hour.toString().padStart(2, '0')
+            const markElm = $.create(
+                'div',
+                {'class': `${css['mark']} ${css['mark']}--h${hour}`}
+            )
+            markElm.textContent = markStr
+            this._dom.hourDial.appendChild(markElm)
+        }
+
+        // Minutes dial
+        this._dom.minuteDial = $.create(
+            'div',
+            {'class': `${css['dial']} ${css['minute_dial']}`}
+        )
+        dialsElm.appendChild(this._dom.minuteDial)
+
+        for (let minute = 0; minute < 60; minute += 5) {
+            let markStr = minute.toString().padStart(2, '0')
+            const markElm = $.create(
+                'div',
+                {'class': `${css['mark']} ${css['mark']}--m${minute}`}
+            )
+            markElm.textContent = markStr
+            this._dom.minuteDial.appendChild(markElm)
+        }
+
         // clock__hand
 
         // Add the clock to the parent element
         this.parent.appendChild(this.clock)
-
     }
 
 }
@@ -117,6 +148,12 @@ Clock.css = {
     'clock': 'mh-clock',
 
     /**
+     * Applied to a dial along with a modifier indicating if it
+     * it contains hours or minutes.
+     */
+    'dial': 'mh-clock__dial',
+
+    /**
      * Applied to the container for the hour and minute dials.
      */
     'dials': 'mh-clock__dials',
@@ -125,6 +162,21 @@ Clock.css = {
      * Applied to the hour element within the time.
      */
     'hour': 'mh-clock__hour',
+
+    /**
+     * Applied to the dial that displays hours.
+     */
+    'hour_dial': 'mh-clock__dial--hour',
+
+    /**
+     * Applied to all marks (hour or minute) on a dial.
+     */
+    'mark': 'mh-clock__mark',
+
+    /**
+     * Applied to the dial that displays minutes.
+     */
+    'minute_dial': 'mh-clock__dial--minute',
 
     /**
      * Applied to the minute element within the time.

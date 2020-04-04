@@ -2,8 +2,12 @@
   font-family: Ubuntu, Helvetica, Arial, sans-serif; }
   .mh-clock--hour-dial .mh-clock__hour {
     color: #ef4f6f; }
-  .mh-clock--minute-dial .mh-clock__hour {
+  .mh-clock--hour-dial .mh-clock__dial--hour {
+    display: block; }
+  .mh-clock--minute-dial .mh-clock__minute {
     color: #ef4f6f; }
+  .mh-clock--minute-dial .mh-clock__dial--minute {
+    display: block; }
   .mh-clock__time {
     border-bottom: 1px solid #d4dce0;
     color: #999;
@@ -39,7 +43,7 @@
     top: 0;
     width: calc(50% - 10px); }
   .mh-clock__dials {
-    background: rgba(212, 220, 224, 0.1);
+    background: rgba(212, 220, 224, 0.2);
     height: 240px;
     position: relative; }
     .mh-clock__dials::before {
@@ -51,6 +55,120 @@
       position: absolute;
       top: 10px;
       width: 220px; }
+  .mh-clock__dial {
+    cursor: pointer;
+    display: none;
+    left: 10px;
+    height: 220px;
+    position: absolute;
+    top: 10px;
+    width: 220px; }
+  .mh-clock__mark {
+    color: #999;
+    font-size: 16px;
+    height: 32px;
+    left: 95px;
+    line-height: 32px;
+    position: absolute;
+    text-align: center;
+    top: 95px;
+    width: 32px; }
+    .mh-clock__mark--h0 {
+      transform: translate(0px, -90px); }
+    .mh-clock__mark--h13 {
+      transform: translate(45px, -77.94225px); }
+    .mh-clock__mark--h14 {
+      transform: translate(77.94225px, -45px); }
+    .mh-clock__mark--h15 {
+      transform: translate(90px, 0px); }
+    .mh-clock__mark--h16 {
+      transform: translate(77.94225px, 45px); }
+    .mh-clock__mark--h17 {
+      transform: translate(45px, 77.94225px); }
+    .mh-clock__mark--h18 {
+      transform: translate(0px, 90px); }
+    .mh-clock__mark--h19 {
+      transform: translate(-45px, 77.94225px); }
+    .mh-clock__mark--h20 {
+      transform: translate(-77.94225px, 45px); }
+    .mh-clock__mark--h21 {
+      transform: translate(-90px, 0px); }
+    .mh-clock__mark--h22 {
+      transform: translate(-77.94225px, -45px); }
+    .mh-clock__mark--h23 {
+      transform: translate(-45px, -77.94225px); }
+    .mh-clock__mark--h12 {
+      color: #666;
+      font-size: 14px;
+      transform: translate(0px, -60px); }
+    .mh-clock__mark--h1 {
+      color: #666;
+      font-size: 14px;
+      transform: translate(30px, -51.9615px); }
+    .mh-clock__mark--h2 {
+      color: #666;
+      font-size: 14px;
+      transform: translate(51.9615px, -30px); }
+    .mh-clock__mark--h3 {
+      color: #666;
+      font-size: 14px;
+      transform: translate(60px, 0px); }
+    .mh-clock__mark--h4 {
+      color: #666;
+      font-size: 14px;
+      transform: translate(51.9615px, 30px); }
+    .mh-clock__mark--h5 {
+      color: #666;
+      font-size: 14px;
+      transform: translate(30px, 51.9615px); }
+    .mh-clock__mark--h6 {
+      color: #666;
+      font-size: 14px;
+      transform: translate(0px, 60px); }
+    .mh-clock__mark--h7 {
+      color: #666;
+      font-size: 14px;
+      transform: translate(-30px, 51.9615px); }
+    .mh-clock__mark--h8 {
+      color: #666;
+      font-size: 14px;
+      transform: translate(-51.9615px, 30px); }
+    .mh-clock__mark--h9 {
+      color: #666;
+      font-size: 14px;
+      transform: translate(-60px, 0px); }
+    .mh-clock__mark--h10 {
+      color: #666;
+      font-size: 14px;
+      transform: translate(-51.9615px, -30px); }
+    .mh-clock__mark--h11 {
+      color: #666;
+      font-size: 14px;
+      transform: translate(-30px, -51.9615px); }
+    .mh-clock__mark--m0 {
+      transform: translate(0px, -90px); }
+    .mh-clock__mark--m5 {
+      transform: translate(45px, -77.94225px); }
+    .mh-clock__mark--m10 {
+      transform: translate(77.94225px, -45px); }
+    .mh-clock__mark--m15 {
+      transform: translate(90px, 0px); }
+    .mh-clock__mark--m20 {
+      transform: translate(77.94225px, 45px); }
+    .mh-clock__mark--m25 {
+      transform: translate(45px, 77.94225px); }
+    .mh-clock__mark--m30 {
+      transform: translate(0px, 90px); }
+    .mh-clock__mark--m35 {
+      transform: translate(-45px, 77.94225px); }
+    .mh-clock__mark--m40 {
+      transform: translate(-77.94225px, 45px); }
+    .mh-clock__mark--m45 {
+      transform: translate(-90px, 0px); }
+    .mh-clock__mark--m50 {
+      transform: translate(-77.94225px, -45px); }
+    .mh-clock__mark--m55 {
+      transform: translate(-45px, -77.94225px); }
 
 .mh-time-picker {
   background: #fff;

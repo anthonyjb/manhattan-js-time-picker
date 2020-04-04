@@ -1,4 +1,8 @@
 
+// cos/sin look up tables
+$cos: 0.0, 0.5, 0.866025, 1.0, 0.866025, 0.5, 0.0, -0.5, -0.866025, -1.0, -0.866025, -0.5;
+$sin: -1.0, -0.866025, -0.5, 0.0, 0.5, 0.866025, 1.0, 0.866025, 0.5, 0.0, -0.5, -0.866025;
+
 .mh-clock {
     font-family: Ubuntu, Helvetica, Arial, sans-serif;
 
@@ -8,14 +12,26 @@
             &__hour {
                 color: #ef4f6f;
             }
+
+            &__dial {
+                &--hour {
+                    display: block;
+                }
+            }
         }
     }
 
     &--minute-dial {
 
         .mh-clock {
-            &__hour {
+            &__minute {
                 color: #ef4f6f;
+            }
+
+            &__dial {
+                &--minute {
+                    display: block;
+                }
             }
         }
     }
@@ -63,7 +79,7 @@
     }
 
     &__dials {
-        background: rgba(#d4dce0, 0.1);
+        background: rgba(#d4dce0, 0.2);
         height: 240px;
         position: relative;
 
@@ -78,4 +94,81 @@
             width: 220px;
         }
     }
+
+    &__dial {
+        cursor: pointer;
+        display: none;
+        left: 10px;
+        height: 220px;
+        position: absolute;
+        top: 10px;
+        width: 220px;
+    }
+
+    &__mark {
+        color: #999;
+        font-size: 16px;
+        height: 32px;
+        left: 95px;
+        line-height: 32px;
+        position: absolute;
+        text-align: center;
+        top: 95px;
+        width: 32px;
+
+        // Hour marks
+        &--h0 {
+            $x: nth($cos, 1) * 90;
+            $y: nth($sin, 1) * 90;
+
+            transform: translate(#{$x}px, #{$y}px);
+        }
+
+        @for $i from 14 through 24 {
+            &--h#{$i - 1} {
+                $x: nth($cos, $i - 12) * 90;
+                $y: nth($sin, $i - 12) * 90;
+
+                transform: translate(#{$x}px, #{$y}px);
+            }
+        }
+
+        &--h12 {
+            $x: nth($cos, 1) * 60;
+            $y: nth($sin, 1) * 60;
+
+            color: #666;
+            font-size: 14px;
+            transform: translate(#{$x}px, #{$y}px);
+        }
+
+        @for $i from 2 through 12 {
+            &--h#{$i - 1} {
+                $x: nth($cos, $i) * 60;
+                $y: nth($sin, $i) * 60;
+
+                color: #666;
+                font-size: 14px;
+                transform: translate(#{$x}px, #{$y}px);
+            }
+        }
+
+        // Minute marks
+        &--m0 {
+            $x: nth($cos, 1) * 90;
+            $y: nth($sin, 1) * 90;
+
+            transform: translate(#{$x}px, #{$y}px);
+        }
+
+        @for $i from 2 through 12 {
+            &--m#{($i - 1) * 5} {
+                $x: nth($cos, $i) * 90;
+                $y: nth($sin, $i) * 90;
+
+                transform: translate(#{$x}px, #{$y}px);
+            }
+        }
+    }
 }
+
