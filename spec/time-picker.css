@@ -44,24 +44,24 @@
     width: calc(50% - 10px); }
   .mh-clock__dials {
     background: rgba(212, 220, 224, 0.2);
-    height: 240px;
+    height: 239px;
     position: relative; }
     .mh-clock__dials::before {
       background: #fff;
       border-radius: 110px;
       content: '';
       height: 220px;
-      left: 10px;
+      left: 9px;
       position: absolute;
-      top: 10px;
+      top: 9px;
       width: 220px; }
   .mh-clock__dial {
     cursor: pointer;
     display: none;
-    left: 10px;
+    left: 9px;
     height: 220px;
     position: absolute;
-    top: 10px;
+    top: 9px;
     width: 220px; }
   .mh-clock__mark {
     color: #999;
@@ -169,6 +169,38 @@
       transform: translate(-77.94225px, -45px); }
     .mh-clock__mark--m55 {
       transform: translate(-45px, -77.94225px); }
+  .mh-clock__hand {
+    background: #ef4f6f;
+    border-radius: 3px;
+    height: 6px;
+    left: 117px;
+    position: absolute;
+    top: 117px;
+    width: 6px;
+    transform: rotate(0deg); }
+    .mh-clock__hand::before {
+      background: #ef4f6f;
+      content: '';
+      display: block;
+      height: 90px;
+      left: 2px;
+      position: absolute;
+      top: -87px;
+      width: 2px; }
+    .mh-clock__hand::after {
+      background: #ef4f6f;
+      border-radius: 32px;
+      box-sizing: border-box;
+      color: #fff;
+      content: '00';
+      display: block;
+      height: 32px;
+      left: -13px;
+      line-height: 32px;
+      position: absolute;
+      text-align: center;
+      top: -103px;
+      width: 32px; }
 
 .mh-time-picker {
   background: #fff;

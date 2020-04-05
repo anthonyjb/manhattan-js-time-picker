@@ -23,6 +23,7 @@ export class Clock {
         // Domain for related DOM elements
         this._dom = {
             'clock': null,
+            'hand': null,
             'hour': null,
             'hourDial': null,
             'minuteDial': null,
@@ -129,7 +130,12 @@ export class Clock {
             this._dom.minuteDial.appendChild(markElm)
         }
 
-        // clock__hand
+        // Hand
+        this._dom.hand = $.create(
+            'div',
+            {'class': css['hand']}
+        )
+        dialsElm.appendChild(this._dom.hand)
 
         // Add the clock to the parent element
         this.parent.appendChild(this.clock)
@@ -157,6 +163,11 @@ Clock.css = {
      * Applied to the container for the hour and minute dials.
      */
     'dials': 'mh-clock__dials',
+
+    /**
+     * Applied to the hand indicating the hour/minute on a dial.
+     */
+    'hand': 'mh-clock__hand',
 
     /**
      * Applied to the hour element within the time.
