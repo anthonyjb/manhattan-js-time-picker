@@ -49,8 +49,7 @@ export class Clock {
             'hand': null,
             'hour': null,
             'hourDial': null,
-            'minuteDial': null,
-            'time': null
+            'minuteDial': null
         }
 
         // Store a reference to the time picker
@@ -76,6 +75,9 @@ export class Clock {
                     this.mode = 'minute'
 
                 } else {
+
+                    // Switch back to hour mode
+                    this.mode = 'hour'
 
                     // Dispatch an event indicating that a time has been
                     // picked.
@@ -323,6 +325,12 @@ export class Clock {
 
         // Add the clock to the parent element
         this.parent.appendChild(this.clock)
+
+        // Set the default mode
+        this._mode = 'hour'
+
+        // Make sure the picking flag is set to false initially
+        this._picking = false
 
         // Update the clock
         this._update()

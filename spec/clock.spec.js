@@ -161,6 +161,8 @@ describe('Clock', () => {
             })
 
             afterEach(() => {
+                clock.destroy()
+
                 clock._handlers.keepFocus.restore()
                 clock._handlers.endPick.restore()
                 clock._handlers.pick.restore()
@@ -284,6 +286,9 @@ describe('Clock', () => {
 
         afterEach(() => {
             clock.destroy()
+
+            window.pageXOffset = 0
+            window.pageYOffset = 0
         })
 
         describe('_getDialCenter', () => {
@@ -337,6 +342,235 @@ describe('Clock', () => {
         })
     })
 
+    describe('events', () => {
+        let clock = null
+
+        beforeEach(() => {
+            clock = new Clock(pickerElm)
+            clock.init()
+        })
+
+        afterEach(() => {
+            clock.destroy()
+        })
+
+        describe('endPick', () => {
+
+            it('should do nothing if not in picking mode', () => {
+                const event = {'preventDefault': sinon.spy()}
+                $.dispatch(clock.clock, 'mouseup', event)
+                clock.mode.should.equal('hour')
+            })
+
+            it('should switch to minute mode if in hour mode', () => {
+                const startEvent = {'preventDefault': sinon.spy()}
+                $.dispatch(clock._dom.hourDial, 'mousedown', startEvent)
+
+                const endEvent = {'preventDefault': sinon.spy()}
+                $.dispatch(document, 'mouseup', endEvent)
+
+                clock.mode.should.equal('minute')
+            })
+
+            it('should switch to hour mode and dispatch pick event if in '
+                + 'hour mode', () => {
+
+                const onPicked = sinon.spy()
+                $.listen(clock.clock, {'picked': onPicked})
+
+                clock.mode = 'minute'
+
+                const startEvent = {'preventDefault': sinon.spy()}
+                $.dispatch(clock._dom.hourDial, 'mousedown', startEvent)
+
+                const endEvent = {'preventDefault': sinon.spy()}
+                $.dispatch(document, 'mouseup', endEvent)
+
+                clock.mode.should.equal('hour')
+                onPicked.should.have.been.called
+            })
+        })
+
+        describe('keepFocus', () => {
+
+            it('should call prevent default against the event to prevent '
+                + 'loss if focus', () => {
+
+                const event = {'preventDefault': sinon.spy()}
+                $.dispatch(clock.clock, 'mousedown', event)
+                event.preventDefault.should.have.been.called
+            })
+        })
+
+        describe('pick', () => {
+
+            beforeEach(() => {
+                clock._dom.hourDial.getBoundingClientRect = () => {
+                    return {
+                        'height': 220,
+                        'left': 0,
+                        'top': 0,
+                        'width': 220
+                    }
+                }
+
+                clock._dom.minuteDial.getBoundingClientRect = () => {
+                    return {
+                        'height': 220,
+                        'left': 0,
+                        'top': 0,
+                        'width': 220
+                    }
+                }
+
+                sinon.spy(clock, '_getDialCenter')
+            })
+
+            afterEach(() => {
+                clock._getDialCenter.restore()
+            })
+
+            it('should do nothing if not in picking mode', () => {
+                const event = {'preventDefault': sinon.spy()}
+                $.dispatch(document, 'mousemove', event)
+                clock._getDialCenter.should.not.have.been.called
+            })
+
+            it('should pick the correct hour', () => {
+
+                const event = {'preventDefault': sinon.spy()}
+                $.dispatch(clock._dom.hourDial, 'mousedown', event)
+
+                // Hour 12
+                const pickEvent = {
+                    'pageX': 109,
+                    'pageY': 0,
+                    'preventDefault': sinon.spy()
+                }
+                $.dispatch(document, 'mousemove', pickEvent)
+                clock.time.toString().should.equal('00:00:00')
+
+                // Inner hour (< 12)
+                pickEvent.pageX = 180
+                pickEvent.pageY = 110
+                $.dispatch(document, 'mousemove', pickEvent)
+                clock.time.toString().should.equal('03:00:00')
+
+                // Inner hour (0)
+                pickEvent.pageX = 110
+                pickEvent.pageY = 60
+                $.dispatch(document, 'mousemove', pickEvent)
+                clock.time.toString().should.equal('12:00:00')
+
+                // Outer hour (> 12)
+                pickEvent.pageX = 220
+                pickEvent.pageY = 110
+                $.dispatch(document, 'mousemove', pickEvent)
+                clock.time.toString().should.equal('15:00:00')
+
+                // Outer hour (0)
+                pickEvent.pageX = 110
+                pickEvent.pageY = 0
+                $.dispatch(document, 'mousemove', pickEvent)
+                clock.time.toString().should.equal('00:00:00')
+            })
+
+            it('should pick the correct minute', () => {
+
+                const event = {'preventDefault': sinon.spy()}
+                $.dispatch(clock._dom.hourDial, 'mousedown', event)
+
+                clock.mode = 'minute'
+
+                // Minute 60
+                const pickEvent = {
+                    'pageX': 109,
+                    'pageY': 0,
+                    'preventDefault': sinon.spy()
+                }
+                $.dispatch(document, 'mousemove', pickEvent)
+                clock.time.toString().should.equal('00:00:00')
+
+                // Minute (< 60)
+                pickEvent.pageX = 220
+                pickEvent.pageY = 110
+                $.dispatch(document, 'mousemove', pickEvent)
+                clock.time.toString().should.equal('00:15:00')
+            })
+
+            it('should work with touch events', () => {
+
+                const event = {'preventDefault': sinon.spy()}
+                $.dispatch(clock._dom.hourDial, 'mousedown', event)
+
+                // Minute 60
+                const pickEvent = {
+                    'touches': [
+                        {
+                            'pageX': 220,
+                            'pageY': 110
+                        }
+                    ],
+                    'preventDefault': sinon.spy()
+                }
+
+                $.dispatch(document, 'mousemove', pickEvent)
+                clock.time.toString().should.equal('15:00:00')
+            })
+        })
+
+        describe('startPick', () => {
+
+            it('should set the clock allow an hour or minute to be '
+                + 'picked', () => {
+
+                const event = {'preventDefault': sinon.spy()}
+                $.dispatch(clock._dom.hourDial, 'mousedown', event)
+
+                clock._picking.should.be.true
+                clock.clock
+                    .classList
+                    .contains(Clock.css['clockPicking'])
+                    .should
+                    .be
+                    .true
+            })
+        })
+
+        describe('switchToHour', () => {
+
+            it('should switch clock to hour mode', () => {
+                clock.mode = 'minute'
+                $.dispatch(clock._dom.hour, 'click', {})
+                clock.mode.should.equal('hour')
+            })
+
+            it('should not switch if picking', () => {
+                const event = {'preventDefault': sinon.spy()}
+                clock._handlers.startPick(event)
+                clock.mode = 'minute'
+                $.dispatch(clock._dom.hour, 'click', {})
+                clock.mode.should.equal('minute')
+            })
+        })
+
+        describe('switchToMinute', () => {
+
+            it('should switch clock to minute mode', () => {
+                $.dispatch(clock._dom.minute, 'click', {})
+                clock.mode.should.equal('minute')
+            })
+
+            it('should not switch if picking', () => {
+                const event = {'preventDefault': sinon.spy()}
+                clock._handlers.startPick(event)
+                $.dispatch(clock._dom.minute, 'click', {})
+                clock.mode.should.equal('hour')
+            })
+        })
+
+    })
 })
 
 
+// pick
