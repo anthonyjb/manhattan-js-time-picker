@@ -343,8 +343,8 @@ export class Clock {
 
         const dialRect = dial.getBoundingClientRect()
         return [
-            window.scrollX + dialRect.left + (dialRect.width / 2.0),
-            window.scrollY + dialRect.top + (dialRect.height / 2.0)
+            window.pageXOffset + dialRect.left + (dialRect.width / 2.0),
+            window.pageYOffset + dialRect.top + (dialRect.height / 2.0)
         ]
     }
 
@@ -399,7 +399,7 @@ export class Clock {
             }
 
             // Content
-            this._dom.hand.dataset.mark = this.time
+            this._dom.hand.dataset.mhMark = this.time
                 .hour
                 .toString()
                 .padStart(2, '0')
@@ -421,12 +421,12 @@ export class Clock {
 
             // Content
             if (this.time.minute % 5 === 0) {
-                this._dom.hand.dataset.mark = this.time
+                this._dom.hand.dataset.mhMark = this.time
                     .minute
                     .toString()
                     .padStart(2, '0')
             } else {
-                this._dom.hand.dataset.mark = ''
+                this._dom.hand.dataset.mhMark = ''
             }
         }
 
