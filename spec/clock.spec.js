@@ -571,6 +571,3 @@ describe('Clock', () => {
 
     })
 })
-
-
-// pick
