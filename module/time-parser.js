@@ -71,17 +71,19 @@ TimeParser.formatters = {
      * Format time as 24h with minutes, e.g 13:00.
      */
     '24hm': (inst, time) => {
+        const hourStr = time.hour.toString().padStart(2, '0')
         const minuteStr = time.minute.toString().padStart(2, '0')
-        return `${time.hour}:${minuteStr}`
+        return `${hourStr}:${minuteStr}`
     },
 
     /**
      * Format time as 24h with minutes and seconds, e.g 13:00:00.
      */
     '24hms': (inst, time) => {
+        const hourStr = time.hour.toString().padStart(2, '0')
         const minuteStr = time.minute.toString().padStart(2, '0')
         const secondStr = time.second.toString().padStart(2, '0')
-        return `${time.hour}:${minuteStr}:${secondStr}`
+        return `${hourStr}:${minuteStr}:${secondStr}`
     }
 }
 

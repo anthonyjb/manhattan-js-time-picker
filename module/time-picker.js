@@ -26,16 +26,6 @@ export class TimePicker {
                 'format': '24hm',
 
                 /**
-                 * The latest time that can be selected.
-                 */
-                'maxTime': null,
-
-                /**
-                 * The earliest time that can be selected.
-                 */
-                'minTime': null,
-
-                /**
                  * Flag indicating if the time picker should display the popup
                  * when the input field is in focus (by default the popup is
                  * displayed).
@@ -74,18 +64,6 @@ export class TimePicker {
         // Set up time parser (the parser must be initialized before we can
         // parse options that contain times).
         this._timeParser = new TimeParser()
-
-        // Handle time based options
-        let _toTime = (s) => {
-            return this._timeParser.parse(this._options.parsers, s)
-        }
-
-        if (typeof this._options.maxTime === 'string') {
-            this._options.maxTime = _toTime(this._options.maxTime)
-        }
-        if (typeof this._options.minDate === 'string') {
-            this._options.minTime = _toTime(this._options.minTime)
-        }
 
         // Configure the behaviours
         this._behaviours = {}
@@ -248,11 +226,7 @@ export class TimePicker {
         document.body.appendChild(this._dom.picker)
 
         // Set up clock
-        this._clock = new Clock(
-            this.picker,
-            this._options.minTime,
-            this._options.maxTime
-        )
+        this._clock = new Clock(this.picker)
         this.clock.init()
 
         // Attempt to get the the time from initial field value
