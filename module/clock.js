@@ -187,10 +187,6 @@ export class Clock {
         return this._dom.clock
     }
 
-    get parent() {
-        return this._dom.parent
-    }
-
     get mode() {
         return this._mode
     }
@@ -199,11 +195,12 @@ export class Clock {
         if (mode !== 'hour' && mode !== 'minute') {
             throw new TypeError('Mode must be \'hour\' or \'minute\'.')
         }
+        this._mode = mode
+        this._update()
+    }
 
-        if (mode !== this._mode) {
-            this._mode = mode
-            this._update()
-        }
+    get parent() {
+        return this._dom.parent
     }
 
     get time() {
@@ -211,10 +208,8 @@ export class Clock {
     }
 
     set time(time) {
-        if (time.toString() !== this._time.toString()) {
-            this._time = time.copy()
-            this._update()
-        }
+        this._time = time.copy()
+        this._update()
     }
 
     // -- Public methods --

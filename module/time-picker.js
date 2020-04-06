@@ -21,6 +21,11 @@ export class TimePicker {
             {
 
                 /**
+                 * The radius of the inner set of hour marks on the clock.
+                 */
+                'innerHourRadius': 72.0,
+
+                /**
                  * The format that times should be displayed in.
                  */
                 'format': '24hm',
@@ -226,7 +231,7 @@ export class TimePicker {
         document.body.appendChild(this._dom.picker)
 
         // Set up clock
-        this._clock = new Clock(this.picker)
+        this._clock = new Clock(this.picker, this._options.innerHourRadius)
         this.clock.init()
 
         // Attempt to get the the time from initial field value
