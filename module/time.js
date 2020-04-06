@@ -35,7 +35,7 @@ export class Time {
     }
 
     set minute(minute) {
-        if (minute < 0 || minute > 23) {
+        if (minute < 0 || minute > 60) {
             throw new RangeError('Not a valid minute')
         }
         this._minute = minute
@@ -46,7 +46,7 @@ export class Time {
     }
 
     set second(second) {
-        if (second < 0 || second > 23) {
+        if (second < 0 || second > 60) {
             throw new RangeError('Not a valid second')
         }
         this._second = second

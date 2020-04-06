@@ -4,11 +4,17 @@
   .mh-clock--hour-mode .mh-clock__hour {
     color: #ef4f6f; }
   .mh-clock--hour-mode .mh-clock__dial--hour {
-    display: block; }
+    display: block;
+    pointer-events: auto; }
   .mh-clock--minute-mode .mh-clock__minute {
     color: #ef4f6f; }
   .mh-clock--minute-mode .mh-clock__dial--minute {
-    display: block; }
+    display: block;
+    pointer-events: auto; }
+  .mh-clock--picking .mh-clock__hand {
+    transition: none; }
+    .mh-clock--picking .mh-clock__hand::after {
+      transition: none; }
   .mh-clock__time {
     border-bottom: 1px solid #d4dce0;
     color: #999;
@@ -62,6 +68,7 @@
     display: none;
     left: 9px;
     height: 220px;
+    pointer-events: none;
     position: absolute;
     top: 9px;
     width: 220px; }
@@ -71,6 +78,7 @@
     height: 32px;
     left: 95px;
     line-height: 32px;
+    pointer-events: none;
     position: absolute;
     text-align: center;
     top: 95px;
@@ -177,6 +185,7 @@
     border-radius: 3px;
     height: 6px;
     left: 117px;
+    pointer-events: none;
     position: absolute;
     top: 117px;
     width: 6px;

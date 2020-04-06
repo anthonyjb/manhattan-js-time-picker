@@ -28,7 +28,10 @@ function getEventPosition(event) {
  */
 export class Clock {
 
-    constructor(parent) {
+    constructor(parent, innerHourRadius=72.0) {
+
+        // The radius of the inner set of hour marks
+        this._innerHourRadius = innerHourRadius
 
         // The clock can be in 2 modes, pick `hour` or pick `minute`,
         // depending on the mode the relevant dial is displayed.
@@ -62,8 +65,22 @@ export class Clock {
                 }
 
                 event.preventDefault()
-
                 this._picking = false
+                this.clock
+                    .classList
+                    .remove(this.constructor.css['clockPicking'])
+
+                if (this.mode === 'hour') {
+
+                    // Switch to minute mode now the hour has been set
+                    this.mode = 'minute'
+
+                } else {
+
+                    // Dispatch an event indicating that a time has been
+                    // picked.
+                    $.dispatch(this.clock, 'picked', {'time': this.time})
+                }
             },
 
             'keepFocus': (event) => {
@@ -98,18 +115,54 @@ export class Clock {
                 // Calculate the distance between the points
                 const powX = Math.pow(center[0] - position[0], 2)
                 const powY = Math.pow(center[1] - position[1], 2)
-                const distance = Math.sqrt(powX + powY)
+                const distance = Math.abs(Math.sqrt(powX + powY))
 
                 // Determine the time based on the current angle and distance
                 // of the mouse from the center of the dial.
+                if (this.mode === 'hour') {
 
-                // @@ START HERE
-                console.log(distance)
+                    // Get the hour
+                    let hour = Math.round((angle / 360.0) * 12.0)
+                    if (hour > 11) {
+                        hour = 0
+                    }
+                    hour = parseInt(hour, 10)
+
+                    // Switch the hour based on which row of marks the user is
+                    // hovering over (based on distance from the center of the
+                    // dial).
+                    if (distance > this._innerHourRadius) {
+                        if (hour > 0) {
+                            hour += 12
+                        }
+                    } else if (hour === 0) {
+                        hour = 12
+                    }
+
+                    // Update the time
+                    this.time = new Time(hour, this.time.minute)
+
+                } else {
+
+                    // Get the minute
+                    let minute = Math.round((angle / 360.0) * 60.0)
+                    if (minute > 59) {
+                        minute = 0
+                    }
+                    minute = parseInt(minute, 10)
+
+                    // Update the time
+                    this.time = new Time(this.time.hour, minute)
+                }
             },
 
             'startPick': (event) => {
                 event.preventDefault()
                 this._picking = true
+                this.clock.classList.add(this.constructor.css['clockPicking'])
+
+                // Make initial pick
+                this._handlers.pick(event)
             },
 
             'switchToHour': (event) => {
@@ -125,7 +178,6 @@ export class Clock {
                     this.mode = 'minute'
                 }
             }
-
         }
     }
 
@@ -291,7 +343,7 @@ export class Clock {
         if (this.mode === 'hour') {
             dial = this._dom.hourDial
         } else {
-            dial = this._dom.hourDial
+            dial = this._dom.minuteDial
         }
 
         const dialRect = dial.getBoundingClientRect()
@@ -382,6 +434,9 @@ export class Clock {
                 this._dom.hand.dataset.mark = ''
             }
         }
+
+        // Dispatch an updated event against the calendar
+        $.dispatch(this.clock, 'updated', {'time': this.time})
     }
 }
 
@@ -394,6 +449,11 @@ Clock.css = {
      * Applied to the root clock element.
      */
     'clock': 'mh-clock',
+
+    /**
+     * Applied to the clock when the user is picking an hour or minute.
+     */
+    'clockPicking': 'mh-clock--picking',
 
     /**
      * Applied to a dial along with a modifier indicating if it

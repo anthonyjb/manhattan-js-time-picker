@@ -39,6 +39,18 @@ $sin: -1.0, -0.866025, -0.5, 0.0, 0.5, 0.866025, 1.0, 0.866025, 0.5, 0.0, -0.5, 
         }
     }
 
+    &--picking {
+        .mh-clock {
+            &__hand {
+                transition: none;
+
+                &::after {
+                    transition: none;
+                }
+            }
+        }
+    }
+
     &__time {
         border-bottom: 1px solid #d4dce0;
         color: #999;
@@ -116,6 +128,7 @@ $sin: -1.0, -0.866025, -0.5, 0.0, 0.5, 0.866025, 1.0, 0.866025, 0.5, 0.0, -0.5, 
         height: 32px;
         left: 95px;
         line-height: 32px;
+        pointer-events: none;
         position: absolute;
         text-align: center;
         top: 95px;
@@ -183,6 +196,7 @@ $sin: -1.0, -0.866025, -0.5, 0.0, 0.5, 0.866025, 1.0, 0.866025, 0.5, 0.0, -0.5, 
         border-radius: 3px;
         height: 6px;
         left: 117px;
+        pointer-events: none;
         position: absolute;
         top: 117px;
         width: 6px;
