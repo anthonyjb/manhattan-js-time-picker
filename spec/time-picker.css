@@ -1,5 +1,6 @@
 .mh-clock {
-  font-family: Ubuntu, Helvetica, Arial, sans-serif; }
+  font-family: Ubuntu, Helvetica, Arial, sans-serif;
+  user-select: none; }
   .mh-clock--hour-mode .mh-clock__hour {
     color: #ef4f6f; }
   .mh-clock--hour-mode .mh-clock__dial--hour {
@@ -179,7 +180,8 @@
     position: absolute;
     top: 117px;
     width: 6px;
-    transform: rotate(var(--angle)); }
+    transform: rotate(var(--angle));
+    transition: transform 0.5s linear; }
     .mh-clock__hand::before {
       background: #ef4f6f;
       content: '';
@@ -203,6 +205,7 @@
       text-align: center;
       top: -103px;
       transform: rotate(calc(0deg - var(--angle)));
+      transition: transform 0.5s linear;
       width: 32px; }
     .mh-clock__hand--small::before {
       height: 42px;
@@ -224,6 +227,7 @@
   display: none;
   margin-top: 10px;
   position: absolute;
+  user-select: none;
   width: 240px;
   z-index: 4; }
   .mh-time-picker--open {

@@ -5,6 +5,7 @@ $sin: -1.0, -0.866025, -0.5, 0.0, 0.5, 0.866025, 1.0, 0.866025, 0.5, 0.0, -0.5, 
 
 .mh-clock {
     font-family: Ubuntu, Helvetica, Arial, sans-serif;
+    user-select: none;
 
     &--hour-mode {
 
@@ -16,6 +17,7 @@ $sin: -1.0, -0.866025, -0.5, 0.0, 0.5, 0.866025, 1.0, 0.866025, 0.5, 0.0, -0.5, 
             &__dial {
                 &--hour {
                     display: block;
+                    pointer-events: auto;
                 }
             }
         }
@@ -31,6 +33,7 @@ $sin: -1.0, -0.866025, -0.5, 0.0, 0.5, 0.866025, 1.0, 0.866025, 0.5, 0.0, -0.5, 
             &__dial {
                 &--minute {
                     display: block;
+                    pointer-events: auto;
                 }
             }
         }
@@ -101,6 +104,7 @@ $sin: -1.0, -0.866025, -0.5, 0.0, 0.5, 0.866025, 1.0, 0.866025, 0.5, 0.0, -0.5, 
         display: none;
         left: 9px;
         height: 220px;
+        pointer-events: none;
         position: absolute;
         top: 9px;
         width: 220px;
@@ -183,6 +187,7 @@ $sin: -1.0, -0.866025, -0.5, 0.0, 0.5, 0.866025, 1.0, 0.866025, 0.5, 0.0, -0.5, 
         top: 117px;
         width: 6px;
         transform: rotate(var(--angle));
+        transition: transform 0.5s linear;
 
         &::before {
             background: #ef4f6f;
@@ -209,6 +214,7 @@ $sin: -1.0, -0.866025, -0.5, 0.0, 0.5, 0.866025, 1.0, 0.866025, 0.5, 0.0, -0.5, 
             text-align: center;
             top: -103px;
             transform: rotate(calc(0deg - var(--angle)));
+            transition: transform 0.5s linear;
             width: 32px;
         }
 

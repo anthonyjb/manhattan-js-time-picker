@@ -284,6 +284,7 @@ export class TimePicker {
         } else {
             this.clock.time = time
         }
+        this.clock.mode = 'hour'
 
         // Update the position of the picker inline with the associated input
         this._track()

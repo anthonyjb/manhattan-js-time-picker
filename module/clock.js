@@ -3,6 +3,23 @@ import * as $ from 'manhattan-essentials'
 import {Time} from './time'
 
 
+// -- Utils --
+
+/**
+ * Return the `[x, y]` position of an event.
+ */
+function getEventPosition(event) {
+    let _event = event
+    if (event.touches) {
+        [_event] = event.touches
+    }
+    return [
+        _event.pageX - window.pageXOffset,
+        _event.pageY - window.pageYOffset
+    ]
+}
+
+
 // -- Class definition --
 
 /**
@@ -13,12 +30,15 @@ export class Clock {
 
     constructor(parent) {
 
-        // The time displayed on the clock
-        this._time = new Time()
-
         // The clock can be in 2 modes, pick `hour` or pick `minute`,
         // depending on the mode the relevant dial is displayed.
         this._mode = 'hour'
+
+        // Flag indicating if the user is currently picking an hour or minute
+        this._picking = false
+
+        // The time displayed on the clock
+        this._time = new Time()
 
         // Domain for related DOM elements
         this._dom = {
@@ -36,18 +56,74 @@ export class Clock {
         // Set up event handlers
         this._handlers = {
 
+            'endPick': (event) => {
+                if (!this._picking) {
+                    return
+                }
+
+                event.preventDefault()
+
+                this._picking = false
+            },
+
             'keepFocus': (event) => {
                 event.preventDefault()
             },
 
+            'pick': (event) => {
+                if (!this._picking) {
+                    return
+                }
+
+                event.preventDefault()
+
+                const center = this._getDialCenter()
+                const position = getEventPosition(event)
+
+                // Calculate the angle
+                let angle = Math.atan2(
+                    position[1] - center[1],
+                    position[0] - center[0]
+                )
+
+                // Convert to degrees
+                angle *= 180.0 / Math.PI
+
+                // Align the angle to the dial
+                angle += 90
+
+                // Normalize the angle (0-360)
+                angle = ((angle % 360) + 360) % 360
+
+                // Calculate the distance between the points
+                const powX = Math.pow(center[0] - position[0], 2)
+                const powY = Math.pow(center[1] - position[1], 2)
+                const distance = Math.sqrt(powX + powY)
+
+                // Determine the time based on the current angle and distance
+                // of the mouse from the center of the dial.
+
+                // @@ START HERE
+                console.log(distance)
+            },
+
+            'startPick': (event) => {
+                event.preventDefault()
+                this._picking = true
+            },
+
             'switchToHour': (event) => {
                 event.preventDefault()
-                this.mode = 'hour'
+                if (!this._picking) {
+                    this.mode = 'hour'
+                }
             },
 
             'switchToMinute': (event) => {
                 event.preventDefault()
-                this.mode = 'minute'
+                if (!this._picking) {
+                    this.mode = 'minute'
+                }
             }
 
         }
@@ -68,6 +144,10 @@ export class Clock {
     }
 
     set mode(mode) {
+        if (mode !== 'hour' && mode !== 'minute') {
+            throw new TypeError('Mode must be \'hour\' or \'minute\'.')
+        }
+
         if (mode !== this._mode) {
             this._mode = mode
             this._update()
@@ -91,7 +171,32 @@ export class Clock {
      * Remove the clock.
      */
     destroy() {
-        console.log(this, 'destroy')
+        if (this.clock) {
+            // Remove event handlers
+            $.ignore(this.clock, {'mousedown': this._handlers.keepFocus})
+            $.ignore(this._dom.hour, {'click': this._handlers.switchToHour})
+            $.ignore(
+                this._dom.minute,
+                {'click': this._handlers.switchToMinute}
+            )
+            $.ignore(
+                this._dom.hourDial,
+                {'mousedown': this._handlers.startPick}
+            )
+            $.ignore(
+                this._dom.minuteDial,
+                {'mousedown': this._handlers.startPick}
+            )
+            $.ignore(document, {'mousemove': this._handlers.pick})
+            $.ignore(document, {'mouseup': this._handlers.endPick})
+
+            // Remove the clock from the parent
+            this.parent.removeChild(this.clock)
+            this._dom.clock = null
+        }
+
+        // Remove the clock reference from the parent
+        delete this._dom.parent._mhClock
     }
 
     /**
@@ -164,6 +269,10 @@ export class Clock {
         $.listen(this.clock, {'mousedown': this._handlers.keepFocus})
         $.listen(this._dom.hour, {'click': this._handlers.switchToHour})
         $.listen(this._dom.minute, {'click': this._handlers.switchToMinute})
+        $.listen(this._dom.hourDial, {'mousedown': this._handlers.startPick})
+        $.listen(this._dom.minuteDial, {'mousedown': this._handlers.startPick})
+        $.listen(document, {'mousemove': this._handlers.pick})
+        $.listen(document, {'mouseup': this._handlers.endPick})
 
         // Add the clock to the parent element
         this.parent.appendChild(this.clock)
@@ -174,6 +283,28 @@ export class Clock {
 
     // -- Private methods --
 
+    /**
+     * Get the center of the dial based on the current mode.
+     */
+    _getDialCenter() {
+        let dial = null
+        if (this.mode === 'hour') {
+            dial = this._dom.hourDial
+        } else {
+            dial = this._dom.hourDial
+        }
+
+        const dialRect = dial.getBoundingClientRect()
+        return [
+            window.scrollX + dialRect.left + (dialRect.width / 2.0),
+            window.scrollY + dialRect.top + (dialRect.height / 2.0)
+        ]
+    }
+
+    /**
+     * Update the view of the clock to display the current time and dial for
+     * the given mode.
+     */
     _update() {
         const {css} = this.constructor
 
@@ -218,7 +349,6 @@ export class Clock {
 
                 // Size
                 this._dom.hand.classList.add(css['handSmall'])
-
             }
 
             // Content
@@ -227,7 +357,7 @@ export class Clock {
                 .toString()
                 .padStart(2, '0')
 
-        } else if (this._mode === 'minute') {
+        } else {
 
             // Set CSS modifier to the relevant mode
             this._dom.clock.classList.remove(css['hourMode'])
@@ -251,11 +381,7 @@ export class Clock {
             } else {
                 this._dom.hand.dataset.mark = ''
             }
-
-        } else {
-            throw new TypeError('Mode must be \'hour\' or \'minute\'.')
         }
-
     }
 }
 
