@@ -137,10 +137,6 @@ export class TimePicker {
         return this._clock
     }
 
-    get timeParser() {
-        return this._timeParser
-    }
-
     get input() {
         return this._dom.input
     }
@@ -151,6 +147,10 @@ export class TimePicker {
 
     get picker() {
         return this._dom.picker
+    }
+
+    get timeParser() {
+        return this._timeParser
     }
 
     // -- Public methods --
