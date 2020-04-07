@@ -41,9 +41,10 @@
   },
   "keywords": [
     "manhattan",
-    "copy to clipboard",
-    "submit form by proxy",
-    "ui interactions"
+    "time field",
+    "time parser",
+    "time picker",
+    "time parser"
   ],
   "author": "Anthony Blackshaw",
   "license": "MIT",
