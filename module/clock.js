@@ -351,8 +351,8 @@ export class Clock {
 
         const dialRect = dial.getBoundingClientRect()
         return [
-            window.pageXOffset + dialRect.left + (dialRect.width / 2.0),
-            window.pageYOffset + dialRect.top + (dialRect.height / 2.0)
+            dialRect.left + (dialRect.width / 2.0),
+            dialRect.top + (dialRect.height / 2.0)
         ]
     }
 

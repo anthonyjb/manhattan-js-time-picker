@@ -278,17 +278,10 @@ describe('Clock', () => {
                     'width': 220
                 }
             }
-
-            window.pageXOffset = 10
-            window.pageYOffset = 10
-
         })
 
         afterEach(() => {
             clock.destroy()
-
-            window.pageXOffset = 0
-            window.pageYOffset = 0
         })
 
         describe('_getDialCenter', () => {
@@ -296,9 +289,9 @@ describe('Clock', () => {
             it('should return the coordinates for the center of the current '
                 + 'dial elemnt', () => {
 
-                clock._getDialCenter().should.deep.equal([130, 130])
+                clock._getDialCenter().should.deep.equal([120, 120])
                 clock.mode = 'minute'
-                clock._getDialCenter().should.deep.equal([140, 140])
+                clock._getDialCenter().should.deep.equal([130, 130])
             })
 
         })
