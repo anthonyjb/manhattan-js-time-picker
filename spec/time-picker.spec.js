@@ -415,13 +415,25 @@ describe('TimePicker', () => {
             timePicker = new TimePicker(inputElm)
             timePicker.init()
 
+
             inputElm.getBoundingClientRect = () => {
                 return {
                     'bottom': 40,
                     'height': 20,
                     'left': 30,
                     'right': 130,
-                    'top': 20,
+                    'top': 100,
+                    'width': 100
+                }
+            }
+
+            timePicker.picker.getBoundingClientRect = () => {
+                return {
+                    'bottom': 50,
+                    'height': 50,
+                    'left': 0,
+                    'right': 100,
+                    'top': 0,
                     'width': 100
                 }
             }
@@ -432,11 +444,43 @@ describe('TimePicker', () => {
 
         afterEach(() => {
             timePicker.destroy()
+
+            Object.defineProperty(
+                document.body,
+                'scrollHeight',
+                {
+                    'configurable': true,
+                    'value': 0
+                }
+            )
         })
 
         describe('track', () => {
 
             it('should position the picker inline with the input', () => {
+
+                Object.defineProperty(
+                    document.body,
+                    'scrollHeight',
+                    {
+                        'configurable': true,
+                        'value': 1000
+                    }
+                )
+
+                timePicker._track()
+                timePicker.picker.style.top.should.equal('140px')
+                timePicker.picker.style.left.should.equal('40px')
+
+                Object.defineProperty(
+                    document.body,
+                    'scrollHeight',
+                    {
+                        'configurable': true,
+                        'value': 120
+                    }
+                )
+
                 timePicker._track()
                 timePicker.picker.style.top.should.equal('50px')
                 timePicker.picker.style.left.should.equal('40px')
