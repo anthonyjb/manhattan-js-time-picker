@@ -1,6 +1,6 @@
 {
   "name": "manhattan-time-picker",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Time parsing and picking for form fields.",
   "engines": {
     "node": ">=10.16.0"

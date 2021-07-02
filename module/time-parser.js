@@ -158,7 +158,13 @@ TimeParser.parsers = {
             return null
         }
 
-        if (!am) {
+        if (hour === 12) {
+            if (am) {
+                hour = 0
+            } else {
+                hour = 12
+            }
+        } else if (!am) {
             hour += 12
         }
 
